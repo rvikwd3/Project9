@@ -22,13 +22,28 @@
  *	2018-12-30 Start Date
 */
 
-#include<iostream>
-#include<iomanip>
+#include <iostream>
+#include <iomanip>
+#include <string.h>
+#include <Magick++.h>
+#include "magick.h"
+
+class Pixel{
+	public:
+		long red;
+		long blue;
+		long green;
+};
 
 using namespace std;
 
 int main (int argc, char** argv){
 
+	// Initialize Magick++ API
+	Magick::InitializeMagick(*argv);
+
+	// [Usage] Correctly use Project9
+	// ------------------------------
 	if(argc < 2){
 		cerr << "Usage:\n" << setw(40) << left << "    ./a.out [filename] [options]" << "Specify filename of image to read" << endl;
 		cerr << endl;
@@ -43,6 +58,18 @@ int main (int argc, char** argv){
 	// ---------------------------------
 	cout << "Argument 0:\t" << argv[0] << endl;
 	cout << "Argument 1:\t" << argv[1] << endl;
+
+	// Call Magick++ RGB Pixel reader
+	// ------------------------------
+	vector<int> dims = getImageDimensions(argv[1]);
+	int cols = getImageColumns(argv[1]);
+	int rows = getImageRows(argv[1]);
+
+	// Display Magick++ call results
+	//------------------------------
+	cout << "Dimensions:\t[" << dims[0] << ", " << dims[1] << "]" << endl;
+	cout << "Rows:\t" << rows << endl;
+	cout << "Columns:\t" << cols << endl;
 
 	return 0;
 }
