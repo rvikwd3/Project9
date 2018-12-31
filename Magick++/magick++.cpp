@@ -9,6 +9,8 @@ int main(int argc, char **argv){
 	InitializeMagick(*argv);
 
 	cout << "Initialized Magick++ API" << endl;
+
+	string filename;
 	cout << "Enter filename:\t";
 	cin >> filename;
 
