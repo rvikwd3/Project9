@@ -25,6 +25,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string.h>
+#include <unistd.h>
 #include <Magick++.h>
 #include "magick.h"
 
@@ -37,33 +38,65 @@ class Pixel{
 
 using namespace std;
 
-int main (int argc, char** argv){
-
-	// Initialize Magick++ API
-	Magick::InitializeMagick(*argv);
-
+void printUsage(){
 	// [Usage] Correctly use Project9
 	// ------------------------------
-	if(argc < 2){
-		cerr << "Usage:\n" << setw(40) << left << "    ./a.out [filename] [options]" << "Specify filename of image to read" << endl;
-		cerr << endl;
-		cerr << setw(20) << left << "Arguments:" << endl;
-		cerr << setw(20) << left << "    -f [filename]" << "Specify filename of image to read" << endl;
+	cerr << "Usage:\n" << setw(40) << left << "    ./a.out [filename] [options]" << "Specify filename of image to read" << endl;
+	cerr << endl;
+	cerr << setw(20) << left << "Arguments:" << endl;
+	cerr << setw(20) << left << "    -f [filename]" << "Specify filename of image to read" << endl;
+	
+	return;
+}
 
-		return 1;	// exit on improper usage
+int main (int argc, char** argv){
+
+	
+	Magick::InitializeMagick(*argv);	// Initialize Magick++ API
+
+	// Using getopt to parse input arguments
+	// -------------------------------------
+	int opt;
+	string input = "";
+
+	if ( (argc <= 1) || (argv[argc-1] == NULL) || (argv[argc-1][0] == '-') ){ // Retrieve the non-option argument
+		cerr << "No arguments given!" << endl;
+		printUsage();
+	}else{
+		input = argv[argc-1];
 	}
-
 
 	// Display arguments passed to shell
 	// ---------------------------------
-	cout << "Argument 0:\t" << argv[0] << endl;
-	cout << "Argument 1:\t" << argv[1] << endl;
+	for(int i=0; i<argc; i++){
+		cout << "Argument " << i << ":\t" << argv[i] << endl;
+	}
+
+	cout << "Input:\t" << input << endl; // Check argument options provided
+
+	opterr = 0;	// Turn off getopt error messages (default case)
+
+	while ( (opt = getopt(argc, argv, "f:")) != -1) {	// Retreive options
+		switch(opt){
+			case 'f':
+				if(optarg) input = optarg;
+				cout << "[GETOPT] input = " << input << endl;
+				break;
+			case '?':
+				cerr << "Unknown option: " << char(optopt) << endl;
+				exit(1);
+				break;
+			}
+	}
+
+	cout << "Input:\t" << input << endl;	// Check argument options provided
+	
 
 	// Call Magick++ RGB Pixel reader
 	// ------------------------------
-	vector<int> dims = getImageDimensions(argv[1]);
-	int cols = getImageColumns(argv[1]);
-	int rows = getImageRows(argv[1]);
+	vector<int> dims = getImageDimensions(input);
+	int cols = getImageColumns(input);
+	int rows = getImageRows(input);
 
 	// Display Magick++ call results
 	//------------------------------

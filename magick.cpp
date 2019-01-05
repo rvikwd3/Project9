@@ -7,13 +7,13 @@ using namespace Magick;
 std::vector<int> getImageDimensions(std::string filename){
 	std::vector<int> dimensions = {-1, -1};
 	
-	Image image(filename);
 
 	try{
+		Image image(filename);
 		dimensions[0] = image.rows();
 		dimensions[1] = image.columns();
 	}catch (Exception &error_){
-		std::cout << "Error ocurred:\t" << error_.what() << std::endl;
+		std::cout << "[MAGICK DIMS] Error ocurred:\t" << error_.what() << std::endl;
 		return dimensions;
 	}
 
@@ -21,13 +21,13 @@ std::vector<int> getImageDimensions(std::string filename){
 }
 
 int getImageRows(std::string filename){
-	Image image(filename);
 	int rows;
 
 	try{
+		Image image(filename);
 		rows = image.rows();
 	}catch (Exception &error_){
-		std::cout << "Error ocurred:\t" << error_.what() << std::endl;
+		std::cout << "[MAGICK ROWS] Error ocurred:\t" << error_.what() << std::endl;
 		return 1;
 	}
 
@@ -35,13 +35,13 @@ int getImageRows(std::string filename){
 }
 
 int getImageColumns(std::string filename){
-	Image image(filename);
 	int columns;
 
 	try{
+		Image image(filename);
 		columns = image.columns();
 	}catch (Exception &error_){
-		std::cout << "Error ocurred:\t" << error_.what() << std::endl;
+		std::cout << "[MAGICK COLS] Error ocurred:\t" << error_.what() << std::endl;
 		return 1;
 	}
 
