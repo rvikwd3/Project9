@@ -4,8 +4,10 @@
 #ifndef MAGICK_H
 #define MAGICK_H
 
-int getImageColumns(std::string filename);
-int getImageRows(std::string filename);
-std::vector<int> getImageDimensions(std::string filename);
+#include <Magick++.h>
+
+int getImageColumns(Magick::Image image);
+int getImageRows(Magick::Image image);
+std::vector<int> getImageDimensions(Magick::Image image);
 
 #endif

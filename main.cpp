@@ -90,19 +90,22 @@ int main (int argc, char** argv){
 	}
 
 	cout << "Input:\t" << input << endl;	// Check argument options provided
-	
+
+	Magick::Image image(input);
 
 	// Call Magick++ RGB Pixel reader
 	// ------------------------------
-	vector<int> dims = getImageDimensions(input);
-	int cols = getImageColumns(input);
-	int rows = getImageRows(input);
+	vector<int> dims = getImageDimensions(image);
+	int cols = getImageColumns(image);
+	int rows = getImageRows(image);
 
 	// Display Magick++ call results
 	//------------------------------
-	cout << "Dimensions:\t[" << dims[0] << ", " << dims[1] << "]" << endl;
-	cout << "Rows:\t" << rows << endl;
-	cout << "Columns:\t" << cols << endl;
+	cout << setw(25) << left << "Dimensions:" << "[" << dims[0] << ", " << dims[1] << "]" << endl;
+	cout << setw(25) << left << "Rows:" << rows << endl;
+	cout << setw(25) << left << "Columns:" << cols << endl;
+
+	// Parse image pixel RGB
 
 	return 0;
 }
