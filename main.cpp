@@ -106,6 +106,12 @@ int main (int argc, char** argv){
 	cout << setw(25) << left << "Columns:" << cols << endl;
 
 	// Parse image pixel RGB
+	cout << "\nPixel Colors:" << endl;
+	for(int i=0; i<cols; i++){	// I think we use columns first cause of Linear Algebra?
+		for(int j=0; j<rows; j++){
+			cout << "(" << i << ", " << j << setw(10) << left << ")" << "Red: " << setw(20) << left << image.pixelColor(j,i).quantumRed() << "Green: " << setw(20) << left << image.pixelColor(j,i).quantumGreen() << "Blue: " << image.pixelColor(j,i).quantumBlue() << endl;
+		}
+	}
 
 	return 0;
 }
