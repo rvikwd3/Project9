@@ -20,6 +20,13 @@
  *	Ravikiran Kawade
  *
  *	2018-12-30 Start Date
+ *	2019-01-06 Read up on Image Segmentation/Quantization
+ *		Convert RGB color space to La*b*
+ *		Use K-means to downsample image (Can we use faster downsampling?) (Is this required?)
+ *		Label regions through Connected Component Labelling
+ *		Create graph through labels
+ *	2019-01-10 Decided to use HSV colorspace instead
+ *		Added 'Convert' namespace for utility colorspace conversion functions
 */
 
 #include <iostream>
@@ -28,13 +35,7 @@
 #include <unistd.h>
 #include <Magick++.h>
 #include "magick.h"
-
-class Pixel{
-	public:
-		long red;
-		long blue;
-		long green;
-};
+#include "convert.h"
 
 using namespace std;
 
@@ -62,6 +63,8 @@ int main (int argc, char** argv){
 	if ( (argc <= 1) || (argv[argc-1] == NULL) || (argv[argc-1][0] == '-') ){ // Retrieve the non-option argument
 		cerr << "No arguments given!" << endl;
 		printUsage();
+
+		return -1;
 	}else{
 		input = argv[argc-1];
 	}
@@ -95,23 +98,45 @@ int main (int argc, char** argv){
 
 	// Call Magick++ RGB Pixel reader
 	// ------------------------------
-	vector<int> dims = getImageDimensions(image);
-	int cols = getImageColumns(image);
-	int rows = getImageRows(image);
+	vector<int> dims 	= getImageDimensions(image);
+	int cols 			= getImageColumns(image);
+	int rows			= getImageRows(image);
 
 	// Display Magick++ call results
-	//------------------------------
+	// -----------------------------
 	cout << setw(25) << left << "Dimensions:" << "[" << dims[0] << ", " << dims[1] << "]" << endl;
 	cout << setw(25) << left << "Rows:" << rows << endl;
 	cout << setw(25) << left << "Columns:" << cols << endl;
 
 	// Parse image pixel RGB
 	cout << "\nPixel Colors:" << endl;
-	for(int i=0; i<cols; i++){	// I think we use columns first cause of Linear Algebra?
+
+	for(int i=0; i<cols; i++){				// I think we use columns first cause of Linear Algebra?
 		for(int j=0; j<rows; j++){
-			cout << "(" << i << ", " << j << setw(10) << left << ")" << "Red: " << setw(20) << left << image.pixelColor(j,i).quantumRed() << "Green: " << setw(20) << left << image.pixelColor(j,i).quantumGreen() << "Blue: " << image.pixelColor(j,i).quantumBlue() << endl;
+
+			cout << "(" << i << ", " << j << setw(10) << left << ")"
+			   	 << "Red: " << setw(20) << left << image.pixelColor(j,i).quantumRed()
+				 << "Green: " << setw(20) << left << image.pixelColor(j,i).quantumGreen()
+				 << "Blue: " << image.pixelColor(j,i).quantumBlue() << endl;
 		}
 	}
+
+	// We'll convert RGB pixel values to HSV
+	rgb		test_rgb;
+	hsv		test_hsv;
+	test_rgb.r = 0.5;
+	test_rgb.g = 0.5;
+	test_rgb.b = 0.5;
+
+	test_hsv.h = 180.0;
+	test_hsv.s = 1.0;
+	test_hsv.v = 1.0;
+
+	hsv test_rgb_out = Convert::rgb2hsv(test_rgb);
+	rgb test_hsv_out = Convert::hsv2rgb(test_hsv);
+
+	cout << "H:\t" << test_rgb_out.h << "\tS:\t" << test_rgb_out.s << "\tV:\t" << test_rgb_out.v << endl;
+	cout << "R:\t" << test_hsv_out.r << "\tG:\t" << test_hsv_out.g << "\tB:\t" << test_hsv_out.b << endl;
 
 	return 0;
 }
