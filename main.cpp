@@ -29,6 +29,7 @@
  *		Added 'Convert' namespace for utility colorspace conversion functions
 */
 
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <string.h>
@@ -39,16 +40,7 @@
 
 using namespace std;
 
-void printUsage(){
-	// [Usage] Correctly use Project9
-	// ------------------------------
-	cerr << "Usage:\n" << setw(40) << left << "    ./a.out [filename] [options]" << "Specify filename of image to read" << endl;
-	cerr << endl;
-	cerr << setw(20) << left << "Arguments:" << endl;
-	cerr << setw(20) << left << "    -f [filename]" << "Specify filename of image to read" << endl;
-	
-	return;
-}
+void printUsage(void);
 
 int main (int argc, char** argv){
 
@@ -58,33 +50,40 @@ int main (int argc, char** argv){
 	// Using getopt to parse input arguments
 	// -------------------------------------
 	int opt;
-	string input = "";
+	string input =		"";				// Program argument strings
+	string outfile =	"";
+	bool image_input_flag =	false;		// Program argument flags
+	bool outfile_flag =		false;
 
 	if ( (argc <= 1) || (argv[argc-1] == NULL) || (argv[argc-1][0] == '-') ){ // Retrieve the non-option argument
-		cerr << "No arguments given!" << endl;
+		cerr << "No arguments given!\n" << endl;
 		printUsage();
 
 		return -1;
-	}else{
-		input = argv[argc-1];
 	}
 
 	// Display arguments passed to shell
 	// ---------------------------------
 	for(int i=0; i<argc; i++){
-		cout << "Argument " << i << ":\t" << argv[i] << endl;
+		cerr << "Argument " << i << ":\t" << argv[i] << endl;
 	}
-
-	cout << "Input:\t" << input << endl; // Check argument options provided
 
 	opterr = 0;	// Turn off getopt error messages (default case)
 
-	while ( (opt = getopt(argc, argv, "f:")) != -1) {	// Retreive options
+	while ( (opt = getopt(argc, argv, "f:o:")) != -1) {				// Retreive options
 		switch(opt){
 			case 'f':
 				if(optarg) input = optarg;
-				cout << "[GETOPT] input = " << input << endl;
+				cerr << "[GETOPT] Input = " << input << endl;		// Store image filename in input
+				image_input_flag =	true;							// Set input flag
 				break;
+
+			case 'o':
+				if(optarg) outfile = optarg;
+				cerr << "[GETOPT] Outfile = " << outfile << endl;	// Store outfile filename in outfile
+				outfile_flag =		true;							// Set outfile flag
+				break;
+				
 			case '?':
 				cerr << "Unknown option: " << char(optopt) << endl;
 				exit(1);
@@ -92,34 +91,26 @@ int main (int argc, char** argv){
 			}
 	}
 
-	cout << "Input:\t" << input << endl;	// Check argument options provided
-
-	Magick::Image image(input);
-
-	// Call Magick++ RGB Pixel reader
-	// ------------------------------
-	vector<int> dims 	= getImageDimensions(image);
-	int cols 			= getImageColumns(image);
-	int rows			= getImageRows(image);
-
-	// Display Magick++ call results
-	// -----------------------------
-	cout << setw(25) << left << "Dimensions:" << "[" << dims[0] << ", " << dims[1] << "]" << endl;
-	cout << setw(25) << left << "Rows:" << rows << endl;
-	cout << setw(25) << left << "Columns:" << cols << endl;
-
-	// Parse image pixel RGB
-	cout << "\nPixel Colors:" << endl;
-
-	for(int i=0; i<cols; i++){				// I think we use columns first cause of Linear Algebra?
-		for(int j=0; j<rows; j++){
-
-			cout << "(" << i << ", " << j << setw(10) << left << ")"
-			   	 << "Red: " << setw(20) << left << image.pixelColor(j,i).quantumRed()
-				 << "Green: " << setw(20) << left << image.pixelColor(j,i).quantumGreen()
-				 << "Blue: " << image.pixelColor(j,i).quantumBlue() << endl;
-		}
+	// Check if image filename was provided
+	if ( ! image_input_flag ){
+		cerr << "\nImage filename not provided!" << endl;
+		printUsage();
 	}
+
+	try{
+		Magick::Image image(input);
+	}catch(Magick::Exception &input_error_){
+		
+		cerr << "\nError while trying to open: " << input << endl;
+		cerr << input_error_.what() << endl;
+		return 1;
+	}
+
+	// Parse image dimensions
+	printImageDimensions(input);
+	
+	// Parse image pixel RGB
+	printImagePixels(input);
 
 	// We'll convert RGB pixel values to HSV
 	rgb		test_rgb;
@@ -139,4 +130,15 @@ int main (int argc, char** argv){
 	cout << "R:\t" << test_hsv_out.r << "\tG:\t" << test_hsv_out.g << "\tB:\t" << test_hsv_out.b << endl;
 
 	return 0;
+}
+
+void printUsage(){
+	// [Usage] Correctly use Project9
+	// ------------------------------
+	cerr << "Usage:\n" << setw(40) << left << "    ./a.out [filename] [options]" << "Specify filename of image to read" << endl;
+	cerr << endl;
+	cerr << setw(20) << left << "Arguments:" << endl;
+	cerr << setw(20) << left << "    -f [filename]" << "Specify filename of image to read" << endl;
+	
+	return;
 }

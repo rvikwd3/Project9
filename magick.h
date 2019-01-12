@@ -10,4 +10,7 @@ int getImageColumns(Magick::Image image);
 int getImageRows(Magick::Image image);
 std::vector<int> getImageDimensions(Magick::Image image);
 
+void printImageDimensions(Magick::Image image);
+void printImagePixels(Magick::Image image);
+
 #endif

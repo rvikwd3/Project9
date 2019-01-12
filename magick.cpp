@@ -1,6 +1,8 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <Magick++.h>
+#include <fstream>
 
 using namespace Magick;
 
@@ -43,4 +45,28 @@ int getImageColumns(Image image){
 	}
 
 	return columns;
+}
+
+void printImageDimensions(Magick::Image image){
+	
+	// Call Magick++ RGB Pixel reader
+	std::vector<int> dims = getImageDimensions(image);
+
+	// Display Magick++ call results
+	std::cout << "Dimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << std::endl;
+}
+
+void printImagePixels(Magick::Image image){
+	std::cout << "\nPixel Colors:" << std::endl;
+
+	for(int i=0; i < image.columns(); i++){				// I think we use columns first cause of Linear Algebra?
+		for(int j=0; j < image.rows(); j++){
+
+			std::cout << "(" << i << ", " << j << std::setw(10) << std::left << ")"
+			   	 << "Red: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumRed()
+				 << "Green: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumGreen()
+				 << "Blue: " << image.pixelColor(j,i).quantumBlue()
+				 << std::endl;
+		}
+	}
 }
