@@ -6,7 +6,7 @@
 
 using namespace Magick;
 
-std::vector<int> getImageDimensions(Image image){
+std::vector<int> getImageDimensions(const Image& image){
 	std::vector<int> dimensions = {-1, -1};
 	
 
@@ -21,7 +21,7 @@ std::vector<int> getImageDimensions(Image image){
 	return dimensions;
 }
 
-int getImageRows(Image image){
+int getImageRows(const Image& image){
 	int rows;
 
 	try{
@@ -34,7 +34,7 @@ int getImageRows(Image image){
 	return rows;
 }
 
-int getImageColumns(Image image){
+int getImageColumns(const Image& image){
 	int columns;
 
 	try{
@@ -47,22 +47,22 @@ int getImageColumns(Image image){
 	return columns;
 }
 
-void printImageDimensions(Magick::Image image){
+void printImageDimensions(const Image& image, std::ofstream& outstream){
 	
 	// Call Magick++ RGB Pixel reader
 	std::vector<int> dims = getImageDimensions(image);
 
 	// Display Magick++ call results
-	std::cout << "Dimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << std::endl;
+	outstream << "\nDimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << "\n";
 }
 
-void printImagePixels(Magick::Image image){
-	std::cout << "\nPixel Colors:" << std::endl;
+void printImagePixels(const Image& image, std::ofstream& outstream){
+	outstream << "\nPixel Colors:" << "\n";
 
 	for(int i=0; i < image.columns(); i++){				// I think we use columns first cause of Linear Algebra?
 		for(int j=0; j < image.rows(); j++){
 
-			std::cout << "(" << i << ", " << j << std::setw(10) << std::left << ")"
+			outstream << "(" << i << ", " << j << std::setw(10) << std::left << ")"
 			   	 << "Red: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumRed()
 				 << "Green: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumGreen()
 				 << "Blue: " << image.pixelColor(j,i).quantumBlue()

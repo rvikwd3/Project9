@@ -50,10 +50,10 @@ int main (int argc, char** argv){
 	// Using getopt to parse input arguments
 	// -------------------------------------
 	int opt;
-	string input =		"";				// Program argument strings
-	string outfile =	"";
-	bool image_input_flag =	false;		// Program argument flags
-	bool outfile_flag =		false;
+	bool image_input_flag 	= false;			// Program argument flags
+	bool outfile_flag 		= false;
+	string input 			= "";				// Program argument strings
+	string outfile 			= "";
 
 	if ( (argc <= 1) || (argv[argc-1] == NULL) || (argv[argc-1][0] == '-') ){ // Retrieve the non-option argument
 		cerr << "No arguments given!\n" << endl;
@@ -75,13 +75,13 @@ int main (int argc, char** argv){
 			case 'f':
 				if(optarg) input = optarg;
 				cerr << "[GETOPT] Input = " << input << endl;		// Store image filename in input
-				image_input_flag =	true;							// Set input flag
+				image_input_flag	= true;							// Set input flag
 				break;
 
 			case 'o':
 				if(optarg) outfile = optarg;
 				cerr << "[GETOPT] Outfile = " << outfile << endl;	// Store outfile filename in outfile
-				outfile_flag =		true;							// Set outfile flag
+				outfile_flag 		= true;							// Set outfile flag
 				break;
 				
 			case '?':
@@ -106,11 +106,18 @@ int main (int argc, char** argv){
 		return 1;
 	}
 
+	// Try opening outfile
+	ofstream outfile_stream ( outfile );
+	if(!outfile_stream){
+		cerr << "\nError while trying to open: " << outfile << endl;
+		return 1;
+	}
+
 	// Parse image dimensions
-	printImageDimensions(input);
+	printImageDimensions(input, outfile_stream);
 	
 	// Parse image pixel RGB
-	printImagePixels(input);
+	printImagePixels(input, outfile_stream);
 
 	// We'll convert RGB pixel values to HSV
 	rgb		test_rgb;

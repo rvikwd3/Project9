@@ -6,11 +6,11 @@
 
 #include <Magick++.h>
 
-int getImageColumns(Magick::Image image);
-int getImageRows(Magick::Image image);
-std::vector<int> getImageDimensions(Magick::Image image);
+int getImageColumns(const Magick::Image& image);
+int getImageRows(const Magick::Image& image);
+std::vector<int> getImageDimensions(const Magick::Image& image);
 
-void printImageDimensions(Magick::Image image);
-void printImagePixels(Magick::Image image);
+void printImageDimensions(const Magick::Image& image, std::ofstream& outstream);
+void printImagePixels(const Magick::Image& image, std::ofstream& outstream);
 
 #endif
