@@ -35,8 +35,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <Magick++.h>
-#include "lib/magick.h"
-#include "lib/convert.h"
+#include "magick.h"
+#include "convert.h"
 
 using namespace std;
 

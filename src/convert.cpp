@@ -5,7 +5,7 @@
  * Conversion formulas are given at https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
 */
 
-#include "lib/convert.h"
+#include "convert.h"
 #include <iostream>
 
 namespace Convert{
