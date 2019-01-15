@@ -9,7 +9,7 @@
 #include <iostream>
 
 namespace Convert{
-	hsv rgb2hsv(rgb in){
+	hsv rgb2hsv(rgb in){	// {{{
 		hsv 	out;
 		double	min, max, delta;
 
@@ -54,9 +54,9 @@ namespace Convert{
 
 
 		return out;
-	}
+	}	// }}}
 
-	rgb hsv2rgb(hsv in){
+	rgb hsv2rgb(hsv in){	// {{{
 
 		rgb		out;
 		double	hh, p, q, t, ff;
@@ -125,5 +125,5 @@ namespace Convert{
 		}
 		
 		return out;
-	}
+	}	// }}]
 }

@@ -6,7 +6,7 @@
 
 using namespace Magick;
 
-std::vector<int> getImageDimensions(const Image& image){
+std::vector<int> getImageDimensions(const Image& image){	//{{{
 	std::vector<int> dimensions = {-1, -1};
 	
 
@@ -19,9 +19,9 @@ std::vector<int> getImageDimensions(const Image& image){
 	}
 
 	return dimensions;
-}
+}	//}}}
 
-int getImageRows(const Image& image){
+int getImageRows(const Image& image){						//{{{
 	int rows;
 
 	try{
@@ -32,9 +32,9 @@ int getImageRows(const Image& image){
 	}
 
 	return rows;
-}
+}	//}}}
 
-int getImageColumns(const Image& image){
+int getImageColumns(const Image& image){					//{{{
 	int columns;
 
 	try{
@@ -45,26 +45,26 @@ int getImageColumns(const Image& image){
 	}
 
 	return columns;
-}
+}	//}}}
 
 // Print the dimensions of the passed image as [Rows, Columns] to a file
-void printImageDimensions(const Image& image, std::ofstream& outstream){
+void printImageDimensions(const Image& image, std::ofstream& outstream){	//{{{
 	
 	// Call Magick++ RGB Pixel reader
 	std::vector<int> dims = getImageDimensions(image);
 
 	// Display Magick++ call results
 	outstream << "\nDimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << "\n";
-}
+}	//}}}
 
 // Print dimensions to stdout
-void printImageDimensions(const Image& image){
+void printImageDimensions(const Image& image){	// {{{
 	std::vector<int> dims = getImageDimensions(image);
 	std::cout << "\nDimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << std::endl;
-}
+}	// }}}
 
 // Print the RGB contents of each pixel of the passed image to a file
-void printImagePixels(const Image& image, std::ofstream& outstream){
+void printImagePixels(const Image& image, std::ofstream& outstream){	// {{{
 	outstream << "\nPixel Colors:" << "\n";
 
 	for(int i=0; i < image.columns(); i++){				// I think we use columns first cause of Linear Algebra?
@@ -77,10 +77,10 @@ void printImagePixels(const Image& image, std::ofstream& outstream){
 				 << std::endl;
 		}
 	}
-}
+}	// }}}
 
 // Print the RGB contents of each pixel to stdout
-void printImagePixels(const Image& image){
+void printImagePixels(const Image& image){	// {{{
 	std::cout << "\nPixel Colors:" << std::endl;
 
 	for(int i=0; i < image.columns(); i++){				// I think we use columns first cause of Linear Algebra?
@@ -93,4 +93,4 @@ void printImagePixels(const Image& image){
 				 << std::endl;
 		}
 	}
-}
+}	// }}}

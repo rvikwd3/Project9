@@ -106,18 +106,26 @@ int main (int argc, char** argv){
 		return 1;
 	}
 
-	// Try opening outfile
-	ofstream outfile_stream ( outfile );
-	if(!outfile_stream){
-		cerr << "\nError while trying to open: " << outfile << endl;
-		return 1;
+	// If outfile is given, try opening outfile
+	ofstream outfile_stream ( outfile );			// I want to open an outfile stream only if the flag is set
+	if ( outfile_flag ){							// This is 99% probably the worst way to do it
+		if(!outfile_stream){
+			cerr << "\nError while trying to open: " << outfile << endl;
+			return 1;
+		}
 	}
 
 	// Parse image dimensions
-	printImageDimensions(input, outfile_stream);
+	if ( outfile_flag )
+		printImageDimensions(input, outfile_stream);
+	else
+		printImageDimensions(input);
 	
 	// Parse image pixel RGB
-	printImagePixels(input, outfile_stream);
+	if ( outfile_flag )
+		printImagePixels(input, outfile_stream);
+	else
+		printImagePixels(input);
 
 	// We'll convert RGB pixel values to HSV
 	rgb		test_rgb;
