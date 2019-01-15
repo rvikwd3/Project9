@@ -47,6 +47,7 @@ int getImageColumns(const Image& image){
 	return columns;
 }
 
+// Print the dimensions of the passed image as [Rows, Columns] to a file
 void printImageDimensions(const Image& image, std::ofstream& outstream){
 	
 	// Call Magick++ RGB Pixel reader
@@ -56,6 +57,13 @@ void printImageDimensions(const Image& image, std::ofstream& outstream){
 	outstream << "\nDimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << "\n";
 }
 
+// Print dimensions to stdout
+void printImageDimensions(const Image& image){
+	std::vector<int> dims = getImageDimensions(image);
+	std::cout << "\nDimensions:\n" << "Rows: " << dims[0] << "\tCols: " << dims[1] << std::endl;
+}
+
+// Print the RGB contents of each pixel of the passed image to a file
 void printImagePixels(const Image& image, std::ofstream& outstream){
 	outstream << "\nPixel Colors:" << "\n";
 
@@ -63,6 +71,22 @@ void printImagePixels(const Image& image, std::ofstream& outstream){
 		for(int j=0; j < image.rows(); j++){
 
 			outstream << "(" << i << ", " << j << std::setw(10) << std::left << ")"
+			   	 << "Red: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumRed()
+				 << "Green: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumGreen()
+				 << "Blue: " << image.pixelColor(j,i).quantumBlue()
+				 << std::endl;
+		}
+	}
+}
+
+// Print the RGB contents of each pixel to stdout
+void printImagePixels(const Image& image){
+	std::cout << "\nPixel Colors:" << std::endl;
+
+	for(int i=0; i < image.columns(); i++){				// I think we use columns first cause of Linear Algebra?
+		for(int j=0; j < image.rows(); j++){
+
+			std::cout << "(" << i << ", " << j << std::setw(10) << std::left << ")"
 			   	 << "Red: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumRed()
 				 << "Green: " << std::setw(20) << std::left << image.pixelColor(j,i).quantumGreen()
 				 << "Blue: " << image.pixelColor(j,i).quantumBlue()

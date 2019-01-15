@@ -11,6 +11,8 @@ int getImageRows(const Magick::Image& image);
 std::vector<int> getImageDimensions(const Magick::Image& image);
 
 void printImageDimensions(const Magick::Image& image, std::ofstream& outstream);
+void printImageDimensions(const Magick::Image& image);
 void printImagePixels(const Magick::Image& image, std::ofstream& outstream);
+void printImagePixels(const Magick::Image& image);
 
 #endif
