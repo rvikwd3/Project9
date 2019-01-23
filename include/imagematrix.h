@@ -1,5 +1,5 @@
 #ifndef PROJECT9_IMAGE_MATRIX_H
-#define PROJECT9_IMAGE_MATRIXH
+#define PROJECT9_IMAGE_MATRIX_H
 
 #include <boost/multi_array.hpp>
 #include "convert.h"
@@ -26,3 +26,5 @@ class ImageMatrix{
 		hsv getHsvAt(unsigned row, unsigned col);
 		
 }
+
+#endif
