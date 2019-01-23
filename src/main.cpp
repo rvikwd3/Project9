@@ -34,98 +34,64 @@
 #include <iomanip>
 #include <string.h>
 #include <unistd.h>
-#include <Magick++.h>
+#include <list>
+
+#include <Magick++.h>		//	Magick++ API
+
+// Project9 Header files
+// Available in the include/ folder
 #include "magick.h"
 #include "convert.h"
+#include "options.h"
 
-using namespace std;
 
-void printUsage(void);
+using namespace std;		// Bad practice; TODO refactor to not use `using namespace std`
 
 int main (int argc, char** argv){
-
 	
+	program_options po = boostPrintUsage(argc, argv);
+	cout << "[MAIN]\t" << po.input_file << endl;
+
 	Magick::InitializeMagick(*argv);	// Initialize Magick++ API
 
-	// Using getopt to parse input arguments
-	// -------------------------------------
-	int opt;
-	bool image_input_flag 	= false;			// Program argument flags
-	bool outfile_flag 		= false;
-	string input 			= "";				// Program argument strings
-	string outfile 			= "";
-
-	if ( (argc <= 1) || (argv[argc-1] == NULL) || (argv[argc-1][0] == '-') ){ // Retrieve the non-option argument
-		cerr << "No arguments given!\n" << endl;
-		printUsage();
-
-		return -1;
-	}
-
-	// Display arguments passed to shell
-	// ---------------------------------
-	for(int i=0; i<argc; i++){
-		cerr << "Argument " << i << ":\t" << argv[i] << endl;
-	}
-
-	opterr = 0;	// Turn off getopt error messages (default case)
-
-	while ( (opt = getopt(argc, argv, "f:o:")) != -1) {				// Retreive options
-		switch(opt){
-			case 'f':
-				if(optarg) input = optarg;
-				cerr << "[GETOPT] Input = " << input << endl;		// Store image filename in input
-				image_input_flag	= true;							// Set input flag
-				break;
-
-			case 'o':
-				if(optarg) outfile = optarg;
-				cerr << "[GETOPT] Outfile = " << outfile << endl;	// Store outfile filename in outfile
-				outfile_flag 		= true;							// Set outfile flag
-				break;
-				
-			case '?':
-				cerr << "Unknown option: " << char(optopt) << endl;
-				exit(1);
-				break;
-			}
-	}
-
 	// Check if image filename was provided
-	if ( ! image_input_flag ){
+	if ( po.input_file.empty() ){
 		cerr << "\nImage filename not provided!" << endl;
-		printUsage();
+		return 1;
 	}
 
 	try{
-		Magick::Image image(input);
+		Magick::Image image(po.input_file);
+
+		if ( po.flag_display ) {image.display();} 
 	}catch(Magick::Exception &input_error_){
 		
-		cerr << "\nError while trying to open: " << input << endl;
+		cerr << "\nError while trying to open: " << po.input_file << endl;
 		cerr << input_error_.what() << endl;
 		return 1;
 	}
 
 	// If outfile is given, try opening outfile
-	ofstream outfile_stream ( outfile );			// I want to open an outfile stream only if the flag is set
-	if ( outfile_flag ){							// This is 99% probably the worst way to do it
+	ofstream outfile_stream ( po.output_file );			// I want to open an outfile stream only if the flag is set
+	if ( po.flag_output_file ){							// This is 99% probably the worst way to do it
 		if(!outfile_stream){
-			cerr << "\nError while trying to open: " << outfile << endl;
+			cerr << "\nError while trying to open: " << po.output_file << endl;
 			return 1;
 		}
 	}
 
 	// Parse image dimensions
-	if ( outfile_flag )
-		printImageDimensions(input, outfile_stream);
+	if ( po.flag_output_file )
+		printImageDimensions(po.input_file, outfile_stream);
 	else
-		printImageDimensions(input);
+		printImageDimensions(po.input_file);
 	
 	// Parse image pixel RGB
-	if ( outfile_flag )
-		printImagePixels(input, outfile_stream);
+	if ( po.flag_output_file )
+		printImagePixels(po.input_file, outfile_stream);
 	else
-		printImagePixels(input);
+		printImagePixels(po.input_file);
+
 
 	// We'll convert RGB pixel values to HSV
 	rgb		test_rgb;
@@ -145,15 +111,7 @@ int main (int argc, char** argv){
 	cout << "R:\t" << test_hsv_out.r << "\tG:\t" << test_hsv_out.g << "\tB:\t" << test_hsv_out.b << endl;
 
 	return 0;
-}
 
-void printUsage(){
-	// [Usage] Correctly use Project9
-	// ------------------------------
-	cerr << "Usage:\n" << setw(40) << left << "    ./a.out [filename] [options]" << "Specify filename of image to read" << endl;
-	cerr << endl;
-	cerr << setw(20) << left << "Arguments:" << endl;
-	cerr << setw(20) << left << "    -f [filename]" << "Specify filename of image to read" << endl;
-	
-	return;
+	cout << "\n" << endl;
+
 }
