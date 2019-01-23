@@ -57,6 +57,7 @@ int main (int argc, char** argv){
 	// Check if image filename was provided
 	if ( po.input_file.empty() ){
 		cerr << "\nImage filename not provided!" << endl;
+		boostPrintUsage(HELP_CODE);
 		return 1;
 	}
 
