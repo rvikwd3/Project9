@@ -7,12 +7,14 @@
 class ImageMatrix{
 	private:
 		//		RGB and HSV matrices
-//		boost::multi_array<rgb, 2> rgb_matrix(boost::extents
-//		boost::multi_array<hsv, 2> hsv_matrix(
+		boost::multi_array<rgb, 2> rgb_matrix;
+		boost::multi_array<hsv, 2> hsv_matrix;
 	public:
+		// Constructors
 		ImageMatrix();								//	Initializer
 		ImageMatrix(const Magick::Image& image);	//	Image -> Matrix constructor
 
+		// Pixel data retreival
 		rgb  operator() (unsigned row, unsigned col);		//	Retrieve RGB pixel data at (i,j)
 		rgb& operator() (unsigned row, unsigned col) const;	//	Use matrix(i, j) as an lvalue
 															//		e.g,
@@ -20,11 +22,12 @@ class ImageMatrix{
 		hsv  operator() (unsigned row, unsigned col);
 		hsv& operator() (unsigned row, unsigned col) const;			
 
-		std::vector<int> getDimensions();			//	Get matrix dimensions
-
 		rgb getRgbAt(unsigned row, unsigned col);	//	Retreive pixel data at (i, j)
 		hsv getHsvAt(unsigned row, unsigned col);
 		
+		//	Get matrix dimensions
+		std::vector<int> getDimensions();
+
 }
 
 #endif

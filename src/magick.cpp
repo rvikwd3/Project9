@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <Magick++.h>
 #include <fstream>
+#include "magick.h"
 
 using namespace Magick;
 
@@ -46,6 +46,24 @@ int getImageColumns(const Image& image){					//{{{
 
 	return columns;
 }	//}}}
+
+// Returns 2x2x3 rgb vector of each pixel in the image
+boost::multi_array< std::array<int, 3>, 2> getImageRgbPixels(const Magick::Image& image){	// {{{
+
+	boost::multi_array< std::array<int, 3>, 2> image_rgb(boost::extents[ image.rows() ][ image.columns() ]);
+
+	for (int i=0; i < image_rgb.shape()[0]; i++){
+		for (int j=0; j < image_rgb.shape()[1]; j++){
+
+			image_rgb[i][j][0] = image.pixelColor(j,i).quantumRed();
+			image_rgb[i][j][1] = image.pixelColor(j,i).quantumGreen();
+			image_rgb[i][j][2] = image.pixelColor(j,i).quantumBlue();
+
+		}
+	}
+
+	return image_rgb;
+}	// }}}
 
 // Print the dimensions of the passed image as [Rows, Columns] to a file
 void printImageDimensions(const Image& image, std::ofstream& outstream){	//{{{

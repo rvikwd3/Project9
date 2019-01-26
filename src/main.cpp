@@ -37,6 +37,7 @@
 #include <list>
 
 #include <Magick++.h>		//	Magick++ API
+#include <boost/multi_array.hpp>
 
 // Project9 Header files
 // Available in the include/ folder
@@ -61,16 +62,18 @@ int main (int argc, char** argv){
 		return 1;
 	}
 
-	try{
-		Magick::Image image(po.input_file);
 
+	Magick::Image image(po.input_file);
+	try{
 		if ( po.flag_display ) {image.display();} 
 	}catch(Magick::Exception &input_error_){
 		
-		cerr << "\nError while trying to open: " << po.input_file << endl;
+		cerr << "\nError while trying to display: " << po.input_file << endl;
 		cerr << input_error_.what() << endl;
 		return 1;
 	}
+
+	cout << "[DEBUG] Image NULL:\t" << endl;
 
 	// If outfile is given, try opening outfile
 	ofstream outfile_stream ( po.output_file );			// I want to open an outfile stream only if the flag is set
@@ -93,6 +96,18 @@ int main (int argc, char** argv){
 	else
 		printImagePixels(po.input_file);
 
+	boost::multi_array< std::array<int, 3>, 2> image_rgb(boost::extents[ getImageRows(image) ][ getImageColumns(image) ]);
+
+	image_rgb = getImageRgbPixels(image);
+
+	for ( int i=0; i < getImageRows(image); i++){
+		for ( int j=0; j < getImageColumns(image); j++){
+
+			std::cout << "Red:\t"   << image_rgb[i][j][0] << std::endl;
+			std::cout << "Green:\t" << image_rgb[i][j][1] << std::endl;
+			std::cout << "Blue:\t"  << image_rgb[i][j][2] << std::endl;
+		 }
+	}
 
 	// We'll convert RGB pixel values to HSV
 	rgb		test_rgb;
