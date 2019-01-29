@@ -9,15 +9,14 @@
 #ifndef PROGRAM_OPTIONS_H
 #define PROGRAM_OPTIONS_H
 
-#define HELP_CODE 0xff
 
 // Initiate struct program_options to false
 typedef struct program_options {
-	bool flag_display		= false;
-	bool flag_input_file	= false;
-	bool flag_output_file	= false;
-	std::string	input_file	= "";
-	std::string output_file	= "";
+    bool flag_display		= false;
+    bool flag_input_file	= false;
+    bool flag_output_file	= false;
+    std::string	input_file	= "";
+    std::string output_file	= "";
 } program_options;
 
 program_options boostPrintUsage(int argc, char** argv);

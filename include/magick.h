@@ -13,6 +13,8 @@ std::vector<int> getImageDimensions(const Magick::Image& image);
 
 boost::multi_array< std::array<int, 3>, 2> getImageRgbPixels(const Magick::Image& image);
 
+Magick::Image resizeImage(const Magick::Image& image, std::array<int, 2> dims);
+
 void printImageDimensions(const Magick::Image& image, std::ofstream& outstream);
 void printImageDimensions(const Magick::Image& image);
 void printImagePixels(const Magick::Image& image, std::ofstream& outstream);

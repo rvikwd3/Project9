@@ -18,7 +18,7 @@ string( STRIP "${MAGICK_LD_FLAGS}" MAGICK_LD_FLAGS )
 # Append Magick++ flags to existing flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${MAGICK_CXX_FLAGS} ${MAGICK_LD_FLAGS}")
 
-set (SOURCES src/main.cpp src/convert.cpp src/magick.cpp src/options.cpp)
+set (SOURCES src/main.cpp src/convert.cpp src/magick.cpp src/options.cpp src/imagematrix.cpp)
 
 add_executable(Project9 ${SOURCES})
 
