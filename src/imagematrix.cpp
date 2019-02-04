@@ -8,6 +8,44 @@ ImageMatrix::ImageMatrix() { // {{{
     // Initialize RGB and HSV matrices
 } // }}}
 
+
+// -------------------------------------------------------------------------------- {{{
+ImageMatrix& ImageMatrix::operator= ( const ImageMatrix& rhs ) {
+	std::cout << "[IMG MATRIX] Copy constructor called" << std::endl;
+
+	int rows = rhs.rgb_matrix.shape()[0];
+	int cols = rhs.hsv_matrix.shape()[1];
+
+	// Exception safe copying
+	// 		In case an error occurs during the for(i)for(j) copying
+	// 		ImageMatrix's matrices aren't partially filled
+	// 		since the copying is done in local temporary matrices
+	boost::multi_array<rgb, 2> swp_rgb_matrix;
+	boost::multi_array<hsv, 2> swp_hsv_matrix;
+
+	swp_rgb_matrix.resize( boost::extents[ rows ][ cols ] );
+	swp_hsv_matrix.resize( boost::extents[ rows ][ cols ] );
+
+	for ( size_t i=0; i < rows; i++ ) {
+		for ( size_t j=0; j < cols; j++ ) {
+
+			swp_rgb_matrix[i][j] = rhs.rgb_matrix[i][j];
+			swp_hsv_matrix[i][j] = rhs.hsv_matrix[i][j];
+		 }
+	}
+
+	// This might not be exception safe, since resize may throw exception.
+	this->rgb_matrix.resize( boost::extents[ rows ][ cols ] );
+	this->hsv_matrix.resize( boost::extents[ rows ][ cols ] );
+
+	// Exception safe
+	std::swap( this->rgb_matrix, swp_rgb_matrix );
+	std::swap( this->hsv_matrix, swp_hsv_matrix );
+
+	return *this;
+}
+// -------------------------------------------------------------------------------- }}}
+
 // --------------------------------------------------------------------------------
 ImageMatrix::ImageMatrix(const Magick::Image& image) { // {{{
     // Get image dimensions
@@ -41,6 +79,12 @@ ImageMatrix::ImageMatrix(const Magick::Image& image) { // {{{
 } // }}}
 
 // --------------------------------------------------------------------------------
+//ImageMatrix::ImageMatrix(const ImageMatrix& im){
+//	std::array<int, 2> dims = im.getDimensions();
+//
+//	for 
+
+// --------------------------------------------------------------------------------
 std::array<int, 2> ImageMatrix::getDimensions() { // {{{
     // return matrix size
     std::array<int, 2> rgb_size = { (int)(rgb_matrix.shape()[0]), (int)(rgb_matrix.shape()[1]) };
@@ -53,7 +97,7 @@ std::array<int, 2> ImageMatrix::getDimensions() { // {{{
 
         retval = {{ -1, -1 }};
     } else {
-        std::cout << "[IMGMATRIX getDimensions()] RGB & HSV Matrices match sizes" << std::endl;
+        //std::cout << "[IMGMATRIX getDimensions()] RGB & HSV Matrices match sizes" << std::endl;
 
         retval = {{ (int)rgb_matrix[0].size(), (int)rgb_matrix[1].size() }};
     }
@@ -79,8 +123,8 @@ rgb ImageMatrix::getRgbAt(unsigned row, unsigned col) { // {{{
     retval.g = rgb_matrix[row][col].g;
     retval.b = rgb_matrix[row][col].b;
 
-    printf("[getRgbAt(%d, %d)] \tRows: %d\tCols: %d\n", row, col, matrix_size[0], matrix_size[1]);
-    printf("[getRgbAt(%d, %d)] \tR: %9.2f\tG: %9.2f\tB: %9.2f\n", row, col, retval.r, retval.g, retval.b);
+    //printf("[getRgbAt(%d, %d)] \tRows: %d\tCols: %d\n", row, col, matrix_size[0], matrix_size[1]);
+    //printf("[getRgbAt(%d, %d)] \tR: %9.2f\tG: %9.2f\tB: %9.2f\n", row, col, retval.r, retval.g, retval.b);
 
     return retval;
 } // }}}
@@ -103,8 +147,8 @@ hsv ImageMatrix::getHsvAt(unsigned row, unsigned col) { // {{{
     retval.s = hsv_matrix[row][col].s;
     retval.v = hsv_matrix[row][col].v;
 
-    printf("[getHsvAt(%d, %d)] \tRows: %d\tCols: %d\n", row, col, matrix_size[0], matrix_size[1]);
-    printf("[getHsvAt(%d, %d)] \tH: %9.2f\tS: %9.2f\tV: %9.2f\n", row, col, retval.h, retval.s, retval.v);
+    //printf("[getHsvAt(%d, %d)] \tRows: %d\tCols: %d\n", row, col, matrix_size[0], matrix_size[1]);
+    //printf("[getHsvAt(%d, %d)] \tH: %9.2f\tS: %9.2f\tV: %9.2f\n", row, col, retval.h, retval.s, retval.v);
 
     return retval;
 } // }}}

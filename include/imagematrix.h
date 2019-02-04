@@ -17,8 +17,9 @@ private:
 
 public:
     // Constructors
-    ImageMatrix();								//	Initializer
-    ImageMatrix(const Magick::Image& image);	//	Image -> Matrix constructor
+    ImageMatrix();													//	Initializer
+    ImageMatrix(const Magick::Image& image);						//	Image -> Matrix constructor
+	ImageMatrix& operator= ( const ImageMatrix& rhs );	// Copy Constructor
 
     // Pixel data retreival
     // 		Is operator() overloading absolutely necessary?

@@ -51,9 +51,10 @@
 #include "options.h"
 #include "imagematrix.h"
 #include "constants.h"
+#include "segmentation.h"
 
 
-using namespace std;		// Bad practice; TODO refactor to not use `using namespace std`
+//using namespace std;		// Bad practice; TODO refactor to not use `using namespace std`
 
 int main (int argc, char** argv) {
 
@@ -77,8 +78,8 @@ int main (int argc, char** argv) {
     // Check if image filename was provided
     try {
         if ( po.input_file.empty() ) {
-            cerr << "\nSpecified image is empty!" << endl;
-            cout << "[MAIN]\t" << po.input_file << endl;
+			std::cerr << "\nSpecified image is empty!" << std::endl;
+			std::cout << "[MAIN]\t" << po.input_file << std::endl;
             boostPrintUsage(constants::HELP_CODE);
             return 1;
         }
@@ -101,16 +102,16 @@ int main (int argc, char** argv) {
         }
     } catch(Magick::Exception &input_error_) {
 
-        cerr << "\nError while trying to display: " << po.input_file << endl;
-        cerr << input_error_.what() << endl;
+		std::cerr << "\nError while trying to display: " << po.input_file << std::endl;
+		std::cerr << input_error_.what() << std::endl;
         return 1;
     }
 
     // If outfile is given, try opening outfile
-    ofstream outfile_stream ( po.output_file );			// I want to open an outfile stream only if the flag is set
+	std::ofstream outfile_stream ( po.output_file );			// I want to open an outfile stream only if the flag is set
     if ( po.flag_output_file ) {							// This is 99% probably the worst way to do it
         if(!outfile_stream) {
-            cerr << "\nError while trying to open: " << po.output_file << endl;
+			std::cerr << "\nError while trying to open: " << po.output_file << std::endl;
             return 1;
         }
     }
@@ -126,6 +127,17 @@ int main (int argc, char** argv) {
     image.display();			// Display the resized image
 
     ImageMatrix im(image);		// Initialize an ImageMatrix of the image
+	ImageMatrix im2(image);
+
+	double threshold		= 0.5;
+	int min_component_size	= 0;
+
+	Segmentor seg(im);
+
+	int no_of_components = 0;
+	no_of_components = seg.applySegmentation( threshold, min_component_size );
+
+	std::cout << "[MAIN] No of components: " << no_of_components << std::endl;
 
 
     // Print image dimensions
