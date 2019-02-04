@@ -124,7 +124,7 @@ int main (int argc, char** argv) {
     image = resizeImage(image, resize_dimensions);
     // -------------------------------------------------------------------------------- }}}
 
-    image.display();			// Display the resized image
+    //image.display();			// Display the resized image
 
     ImageMatrix im(image);		// Initialize an ImageMatrix of the image
 	ImageMatrix im2(image);

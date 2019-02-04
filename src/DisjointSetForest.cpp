@@ -59,7 +59,7 @@ void DisjointSetForest::join( int x, int y ) {
 	}
 
 	num--;
-	fprintf(stderr, " [JOIN %d, %d]\tSets: %d", x, y, num);
+	//fprintf(stderr, " [JOIN %d, %d]\tSets: %d", x, y, num);
 }
 // -------------------------------------------------------------------------------- }}}
 
@@ -96,16 +96,13 @@ void DisjointSetForest::segmentGraph( int no_of_vertices, int no_of_edges, std::
 			if ( edge.weight <= threshold_array[a] && edge.weight <= threshold_array[b] ) {
 
 				this->join(a, b);
-
-				fprintf(stderr, "\tJoin %d, %d", a, b);
+				//fprintf(stderr, "\tJoin %d, %d", a, b);
 
 				a = this->find( a );
 
 				threshold_array[a] = edge.weight + threshold / this->size( a );
 			}
-
-			fprintf(stderr, "\n");
-
+			//fprintf(stderr, "\n");
 		}
 	}
 } // }}}

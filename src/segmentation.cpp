@@ -114,7 +114,8 @@ int Segmentor::applySegmentation(double threshold, int min_component_size){
 				|| ( forest.size(b) < min_component_size )
 				)
 		   ) {
-			fprintf(stderr, "\n[MIN COMP] %d, %d\n", a, b);
+			
+			//fprintf(stderr, "\n[MIN COMP] %d, %d\n", a, b);
 			forest.join(a, b);
 		}
 	}
