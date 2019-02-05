@@ -2,13 +2,21 @@
 #include "imagematrix.h"
 #include "magick.h"
 
-// --------------------------------------------------------------------------------
-ImageMatrix::ImageMatrix() { // {{{
+// -------------------------------------------------------------------------------- {{{
+ImageMatrix::ImageMatrix() {
     std::cout << "[IMAGE MATRIX] Please specify the image size to ImageMatrix" << std::endl;
     // Initialize RGB and HSV matrices
 } // }}}
 
+// -------------------------------------------------------------------------------- {{{
+ImageMatrix::ImageMatrix( int width, int height ){
+	std::cout << "[IMG MATRIX] Width/Height constructor called" << std::endl;
 
+	rgb_matrix.resize( boost::extents[ height ][ width ] );
+	hsv_matrix.resize( boost::extents[ height ][ width ] );
+} // }}}
+
+// Copy Constructor
 // -------------------------------------------------------------------------------- {{{
 ImageMatrix& ImageMatrix::operator= ( const ImageMatrix& rhs ) {
 	std::cout << "[IMG MATRIX] Copy constructor called" << std::endl;
@@ -46,8 +54,9 @@ ImageMatrix& ImageMatrix::operator= ( const ImageMatrix& rhs ) {
 }
 // -------------------------------------------------------------------------------- }}}
 
-// --------------------------------------------------------------------------------
-ImageMatrix::ImageMatrix(const Magick::Image& image) { // {{{
+// ImageMatrix from Magick++ Image Constructor
+// -------------------------------------------------------------------------------- {{{
+ImageMatrix::ImageMatrix(const Magick::Image& image) {
     // Get image dimensions
     std::vector<int> dims = getImageDimensions(image);
 
@@ -78,14 +87,9 @@ ImageMatrix::ImageMatrix(const Magick::Image& image) { // {{{
 
 } // }}}
 
-// --------------------------------------------------------------------------------
-//ImageMatrix::ImageMatrix(const ImageMatrix& im){
-//	std::array<int, 2> dims = im.getDimensions();
-//
-//	for 
-
-// --------------------------------------------------------------------------------
-std::array<int, 2> ImageMatrix::getDimensions() { // {{{
+// Get Dimensions
+// -------------------------------------------------------------------------------- {{{
+std::array<int, 2> ImageMatrix::getDimensions() {
     // return matrix size
     std::array<int, 2> rgb_size = { (int)(rgb_matrix.shape()[0]), (int)(rgb_matrix.shape()[1]) };
     std::array<int, 2> hsv_size = { (int)(hsv_matrix.shape()[0]), (int)(hsv_matrix.shape()[1]) };
@@ -99,14 +103,15 @@ std::array<int, 2> ImageMatrix::getDimensions() { // {{{
     } else {
         //std::cout << "[IMGMATRIX getDimensions()] RGB & HSV Matrices match sizes" << std::endl;
 
-        retval = {{ (int)rgb_matrix[0].size(), (int)rgb_matrix[1].size() }};
+        retval = {{ (int)rgb_matrix.size(), (int)rgb_matrix[0].size() }};
     }
 
     return retval;
 } // }}}
 
-// --------------------------------------------------------------------------------
-rgb ImageMatrix::getRgbAt(unsigned row, unsigned col) { // {{{
+// Get RGB Values at (j, i)
+// -------------------------------------------------------------------------------- {{{
+rgb ImageMatrix::getRgbAt(unsigned col, unsigned row) {
     // return this(row, col);
     rgb retval;
 
@@ -114,7 +119,7 @@ rgb ImageMatrix::getRgbAt(unsigned row, unsigned col) { // {{{
 
     // Return {-1, -1, -1} if (row, col) tries to access outside the imagematrix
     if ( (row >= matrix_size[0]) || (col >= matrix_size[1]) ) {
-        fprintf(stderr, "[ERROR] getRgbAt(%d, %d) is trying to access elements outside of the image matrix", row, col);
+        fprintf(stderr, "[ERROR] getRgbAt(%d, %d) is trying to access elements outside of the image matrix\n", row, col);
         return retval;
     }
 
@@ -129,8 +134,9 @@ rgb ImageMatrix::getRgbAt(unsigned row, unsigned col) { // {{{
     return retval;
 } // }}}
 
-// --------------------------------------------------------------------------------
-hsv ImageMatrix::getHsvAt(unsigned row, unsigned col) { // {{{
+// Get HSV Values at (j, i)
+// -------------------------------------------------------------------------------- {{{
+hsv ImageMatrix::getHsvAt(unsigned col, unsigned row) {
     // return this(row, col);
     hsv retval;
 
@@ -138,7 +144,7 @@ hsv ImageMatrix::getHsvAt(unsigned row, unsigned col) { // {{{
 
     // ensure row, col are within matrix size
     if ( (row >= matrix_size[0]) || (col >= matrix_size[1]) ) {
-        fprintf(stderr, "[ERROR] getRgbAt(%d, %d) is trying to access elements outside of the image matrix", row, col);
+        fprintf(stderr, "[ERROR] getRgbAt(%d, %d) is trying to access elements outside of the image matrix\n", row, col);
         return retval;
     }
 

@@ -27,15 +27,15 @@ int Segmentor::noOfConnectedComponents(){
 
 // L2 Norm difference between two color pixels
 // -------------------------------------------------------------------------------- {{{
-double Segmentor::diff( ImageMatrix& img, int x1, int x2, int y1, int y2 ) {
+double Segmentor::diff( ImageMatrix& img, int x1, int y1, int x2, int y2 ) {
     std::vector<double> vec1;
-    hsv temp_hsv = img.getHsvAt(x1, x2);
+    hsv temp_hsv = img.getHsvAt(x1, y1);
     vec1.push_back((double)(temp_hsv.h / 360.0)); 	// Divide by 360 because Hue is in terms of degrees.
     vec1.push_back(temp_hsv.s);
     vec1.push_back(temp_hsv.v);
 
     std::vector<double> vec2;
-    temp_hsv = img.getHsvAt(y1, y2);
+    temp_hsv = img.getHsvAt(x2, y2);
     vec2.push_back((double)(temp_hsv.h / 360.0));		// Divide by 360 because Hue is in terms of degrees.
     vec2.push_back(temp_hsv.s);
     vec2.push_back(temp_hsv.v);
@@ -61,37 +61,38 @@ int Segmentor::applySegmentation(double threshold, int min_component_size){
 	// Assuming that the image is already pre-processed: Gaussian blur
 	int no_of_edges = 0;
 
-	int width	= image_size[0];
-	int height	= image_size[1];
+	int cols	= image_size[1];
+	int rows	= image_size[0];
 
-	std::vector<Edge> edges( width * height * 4 );
+	std::vector<Edge> edges( rows * cols * 4 );
 
-	for (int y=0; y < height; y++ ) {
-		for (int x=0; x < width; x++ ) {
+	for (int y=0; y < rows; y++ ) {
+		for (int x=0; x < cols; x++ ) {
 
-			if ( x < width - 1 ) {
-				edges[no_of_edges].node1	= y * width + x;
-				edges[no_of_edges].node2	= y * width + (x + 1);
+			if ( x < cols - 1 ) {
+				edges[no_of_edges].node1	= y * cols + x;
+				edges[no_of_edges].node2	= y * cols + (x + 1);
 				edges[no_of_edges].weight	= diff (image, x, y, x+1, y);
 				no_of_edges++;
 			}
 
-			if ( y < height - 1 ) {
-				edges[no_of_edges].node1	= y			* width + x;
-				edges[no_of_edges].node2	= (y + 1)	* width + x;
+			if ( y < rows - 1 ) {
+				edges[no_of_edges].node1	= y			* cols + x;
+				edges[no_of_edges].node2	= (y + 1)	* cols + x;
 				edges[no_of_edges].weight	= diff (image, x, y, x, y+1);
 				no_of_edges++;
 			}
 
-			if ( (x < width - 1) && (y < height - 1) ) {
-				edges[no_of_edges].node1	= y			* width + x;
-				edges[no_of_edges].node2	= (y + 1)	* width + (x + 1);
+			if ( (x < cols - 1) && (y < rows - 1) ) {
+				edges[no_of_edges].node1	= y			* cols + x;
+				edges[no_of_edges].node2	= (y + 1)	* cols + (x + 1);
 				edges[no_of_edges].weight	= diff (image, x, y, x+1, y+1);
+				no_of_edges++;
 			}
 
-			if ( (x < width - 1) && (y > 0) ) {
-				edges[no_of_edges].node1	= y			* width + x;
-				edges[no_of_edges].node2	= (y - 1)	* width + (x + 1);
+			if ( (x < cols - 1) && (y > 0) ) {
+				edges[no_of_edges].node1	= y			* cols + x;
+				edges[no_of_edges].node2	= (y - 1)	* cols + (x + 1);
 				edges[no_of_edges].weight	= diff (image, x, y, x+1, y-1);
 				no_of_edges++;
 			}
@@ -102,7 +103,7 @@ int Segmentor::applySegmentation(double threshold, int min_component_size){
 	edges.resize( no_of_edges );
 
 	// Apply segmentation to the edges
-	forest.segmentGraph( height * width, no_of_edges, edges, threshold );
+	forest.segmentGraph( rows * cols, no_of_edges, edges, threshold );
 	
 	// Union all the smaller sets
 	for ( Edge& edge: edges ) {
@@ -123,4 +124,21 @@ int Segmentor::applySegmentation(double threshold, int min_component_size){
 	return noOfConnectedComponents();
 }
 // -------------------------------------------------------------------------------- }}}
+
+// Recolor segments and display image
+ImageMatrix Segmentor::recolor( bool random_color ){
+	int width	= image_size[1];
+	int height	= image_size[0];
+	ImageMatrix result( height, width );
+
+	std::map<int, rgb> colors;
+
+	if ( ! random_color ){
+		// Color segments based on average color
+	}
+	else{
+	}
+
+	return result;
+}
 

@@ -31,7 +31,7 @@ public:
     double diff ( ImageMatrix& img, int x1, int x2, int y1, int y2 );
 
     int 		applySegmentation(double threshold, int min_component_size);
-    //ImageMatrix	recolor( bool random_color = false );
+    ImageMatrix	recolor( bool random_color = false );
     int 		noOfConnectedComponents();
 
 protected:

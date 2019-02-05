@@ -17,24 +17,21 @@ private:
 
 public:
     // Constructors
-    ImageMatrix();													//	Initializer
-    ImageMatrix(const Magick::Image& image);						//	Image -> Matrix constructor
-	ImageMatrix& operator= ( const ImageMatrix& rhs );	// Copy Constructor
+    ImageMatrix();												//	Empty constructor
+	ImageMatrix( int width, int height );						//	(rows, cols) -> Matrix constructor
+    ImageMatrix(const Magick::Image& image);					//	Image -> Matrix constructor
+	ImageMatrix& operator= ( const ImageMatrix& rhs );			//	Copy Constructor
 
     // Pixel data retreival
     // 		Is operator() overloading absolutely necessary?
-
-    //template <typename T>
-    //	T operator() (unsigned row, unsigned col);
-    //rgb  operator() (unsigned row, unsigned col, int matrix_specifier);
-    //rgb& operator() (unsigned row, unsigned col, int matrix_specifier) const;
+    //rgb  operator() (unsigned row, unsigned col);
+    //rgb& operator() (unsigned row, unsigned col) const;
+    //hsv  operator() (unsigned row, unsigned col);
+    //hsv& operator() (unsigned row, unsigned col) const;
     //	Retrieve RGB pixel data at (i,j)
     //	Use matrix(i, j) as an lvalue
     //		e.g,
     //		matrix(3, 8) = rgb(255, 0, 0);
-
-    //hsv  operator() (unsigned row, unsigned col);
-    //hsv& operator() (unsigned row, unsigned col) const;
 
     rgb getRgbAt(unsigned row, unsigned col);	//	Retreive pixel data at (i, j)
     hsv getHsvAt(unsigned row, unsigned col);

@@ -136,11 +136,11 @@ int main (int argc, char** argv) {
     ImageMatrix im(image);		// Initialize an ImageMatrix of the image
 	ImageMatrix im2(image);
 
-	int min_component_size		= 0;
+	int min_component_size = 4;
 
 	Segmentor seg(im);
 
-	int no_of_components = 0;
+	int no_of_components = -1;
 	no_of_components = seg.applySegmentation( segmentation_threshold, min_component_size );
 
 	std::cout << "[MAIN] No of components: " << no_of_components << std::endl;

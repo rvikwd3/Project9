@@ -15,6 +15,7 @@ std::vector<int> getImageDimensions(const Image& image) {	//{{{
     try {
         dimensions[0] = image.rows();
         dimensions[1] = image.columns();
+		std::cout << "[MAGICK DIMS] Rows: " << dimensions[0] << " Cols: " << dimensions[1] << std::endl;
     } catch (Exception &error_) {
         std::cout << "[MAGICK DIMS] Error ocurred:\t" << error_.what() << std::endl;
         return dimensions;
