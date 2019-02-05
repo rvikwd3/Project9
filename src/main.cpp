@@ -60,6 +60,8 @@ int main (int argc, char** argv) {
 
     Magick::InitializeMagick(*argv);	// Initialize Magick++ API
 
+	double segmentation_threshold = 0.5;
+
     // Boiler plate program argument parsing
     // -------------------------------------------------------------------------------- {{{
 
@@ -89,6 +91,11 @@ int main (int argc, char** argv) {
         return 1;
     }
 
+	// Check if segmentation threshold was given
+	if ( !po.flag_threshold )
+		std::cout << "Using default segmentation threshold of 0.5" << std::endl;
+	else
+		segmentation_threshold = po.threshold;
 
     // Create a Magick++ Image from the given filename
     Magick::Image image(po.input_file);
@@ -129,13 +136,12 @@ int main (int argc, char** argv) {
     ImageMatrix im(image);		// Initialize an ImageMatrix of the image
 	ImageMatrix im2(image);
 
-	double threshold		= 0.5;
-	int min_component_size	= 0;
+	int min_component_size		= 0;
 
 	Segmentor seg(im);
 
 	int no_of_components = 0;
-	no_of_components = seg.applySegmentation( threshold, min_component_size );
+	no_of_components = seg.applySegmentation( segmentation_threshold, min_component_size );
 
 	std::cout << "[MAIN] No of components: " << no_of_components << std::endl;
 

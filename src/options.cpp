@@ -17,6 +17,7 @@ int boostPrintUsage(int help_code) { // {{{
         ("input-file,i",	"Specify input file of image to read")
         ("outfile,o",		"Specify filename of text file to write image dimensions & pixel colors")
         ("display,d",		"Display the input image")
+        ("threshold,t",		"Decimal threshold for segmentation. Range is positive. (eg 1.2)")
         ;
 
         std::cout << desc << std::endl;
@@ -44,6 +45,7 @@ program_options boostPrintUsage(int argc, char** argv) { // {{{
     ("input-file,i",	po::value<std::string>(),	"Specify input file of image to read")
     ("outfile,o",		po::value<std::string>(),	"Specify filename of text file to write image dimensions & pixel colors")
     ("display,d",		"Display the input image")
+	("threshold,t",		po::value<double>(),		"Decimal threshold for segmentation. Range is positive. (eg 1.2)")
     ;
 
     po::variables_map vm;
@@ -56,21 +58,27 @@ program_options boostPrintUsage(int argc, char** argv) { // {{{
     }
 
     if ( vm.count("input-file") ) {
-        std::cout << "BOOST\n" << vm["input-file"].as<std::string>() << std::endl;
+        std::cout << "[BOOST]\t" << vm["input-file"].as<std::string>() << std::endl;
         args.flag_input_file	= true;
         args.input_file			= vm["input-file"].as <std::string>();
     }
 
     if ( vm.count("outfile") ) {
-        std::cout << "BOOST\n" << vm["outfile"].as<std::string>() << std::endl;
+        std::cout << "[BOOST]\t" << vm["outfile"].as<std::string>() << std::endl;
         args.flag_output_file	= true;
         args.output_file		= vm["outfile"].as<std::string>();
     }
 
     if ( vm.count("display") ) {
-        std::cout << "BOOST\nDisplay flag triggered" << std::endl;
+        std::cout << "[BOOST]\tDisplay flag triggered" << std::endl;
         args.flag_display = true;
     }
+
+	if ( vm.count("threshold") ) {
+		std::cout << "[BOOST]\tThreshold: " << vm["threshold"].as<double>() << std::endl;
+		args.flag_threshold		= true;
+		args.threshold			= vm["threshold"].as<double>();
+	}
 
     return args;
 

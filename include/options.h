@@ -15,8 +15,10 @@ typedef struct program_options {
     bool flag_display		= false;
     bool flag_input_file	= false;
     bool flag_output_file	= false;
+	bool flag_threshold		= false;
     std::string	input_file	= "";
     std::string output_file	= "";
+	double threshold		= 0.0;
 } program_options;
 
 program_options boostPrintUsage(int argc, char** argv);
